@@ -1,0 +1,42 @@
+# All services (containers) are here
+services:
+  # Container with PostgreSQL
+  postgres:
+    image: postgres:15
+
+    # Container name (to see in docker ps)
+    container_name: workout_db
+
+    # Service's specific variables
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    # Which port to share
+    # 5432 outside -> 5432 inside container
+    ports:
+      - "5432:5432"
+
+    # Persistent storage - DB won't lost after restart
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    # Network for containers connection
+    networks:
+      - workout_network
+
+    # Restart automatically
+    restart: unless-stopped
+
+
+# Named tom (for DB)
+volumes:
+  postgres_data:
+
+
+# Custom part for containers
+networks:
+  workout_network:
+    driver: bridge
+
